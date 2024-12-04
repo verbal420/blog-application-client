@@ -14,7 +14,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <h1>Blog Application</h1>
+      <h1 style={{ color: 'white' }}>Blog Application</h1>
       <div>
         {user ? (
           <>
