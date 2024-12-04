@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -6,42 +7,38 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const userCredentials = { email, password };
-
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userCredentials),
-      });
+      const res = await axios.post("http://localhost:5000/auth/login", { email, password });
+      const { token, user } = res.data;
+      localStorage.setItem("token", token);
 
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
-        navigate("/dashboard");
+      if (user.isAdmin) {
+        navigate("/admin");
       } else {
-        alert(data.error || "Login failed");
+        navigate("/user-dashboard");
       }
-    } catch (error) {
-      console.error("Error during login:", error);
+    } catch (err) {
+      console.error(err.response.data.error);
     }
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleSubmit}>
       <input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        required
       />
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        required
       />
       <button type="submit">Login</button>
     </form>

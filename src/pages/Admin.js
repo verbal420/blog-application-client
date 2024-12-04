@@ -8,7 +8,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/blogs");
+        const res = await axios.get("http://localhost:5000/server/blogs");
         setBlogs(res.data);
       } catch (err) {
         console.error(err.response.data);
@@ -17,7 +17,7 @@ const Admin = () => {
 
     const fetchComments = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/comments");
+        const res = await axios.get("http://localhost:5000/server/comments");
         setComments(res.data);
       } catch (err) {
         console.error(err.response.data);
@@ -30,7 +30,7 @@ const Admin = () => {
 
   const deleteBlog = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/blogs/${id}`);
+      await axios.delete(`http://localhost:5000/server/blogs/${id}`);
       setBlogs(blogs.filter((blog) => blog._id !== id));
     } catch (err) {
       console.error(err.response.data);
@@ -39,7 +39,7 @@ const Admin = () => {
 
   const deleteComment = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/comments/${id}`);
+      await axios.delete(`http://localhost:5000/server/comments/${id}`);
       setComments(comments.filter((comment) => comment._id !== id));
     } catch (err) {
       console.error(err.response.data);
