@@ -1,31 +1,36 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", { email, password });
-      const { token, user } = res.data;
-      localStorage.setItem("token", token);
-
-      if (user.isAdmin) {
-        navigate("/admin");
+      const response = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        login(data);
+        navigate("/blogs");
       } else {
-        navigate("/user-dashboard");
+        alert(data.error);
       }
-    } catch (err) {
-      console.error(err.response.data.error);
+    } catch (error) {
+      console.error("Login failed:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleLogin}>
+      <h2>Login</h2>
       <input
         type="email"
         placeholder="Email"

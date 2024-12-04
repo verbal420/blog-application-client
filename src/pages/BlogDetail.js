@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 
 const BlogDetail = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [blog, setBlog] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const blogRes = await axios.get(`http://localhost:5000/server/blogs/${id}`);
-        setBlog(blogRes.data);
-
-        const commentsRes = await axios.get(`http://localhost:5000/server/comments/${id}`);
-        setComments(commentsRes.data);
-      } catch (err) {
-        console.error("Error fetching blog details:", err.response?.data || err.message);
+        const response = await fetch(`http://localhost:5000/server/blogs/${id}`);
+        const data = await response.json();
+        setBlog(data);
+      } catch (error) {
+        console.error("Error fetching blog:", error);
       }
     };
 
@@ -27,43 +23,39 @@ const BlogDetail = () => {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`http://localhost:5000/server/comments`, {
-        blogId: id,
-        content: newComment,
+      await fetch(`http://localhost:5000/server/comments/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ text: comment }),
       });
-      setComments([...comments, res.data]);
-      setNewComment("");
-    } catch (err) {
-      console.error("Error adding comment:", err.response?.data || err.message);
+      setComment("");
+    } catch (error) {
+      console.error("Error adding comment:", error);
     }
   };
 
-  if (!blog) return <div>Loading...</div>;
-
   return (
     <div>
-      <h1>{blog.title}</h1>
-      <p>{blog.content}</p>
-      <hr />
-      <h2>Comments</h2>
-      {comments.length > 0 ? (
-        comments.map((comment) => (
-          <div key={comment._id}>
-            <p>{comment.content}</p>
-          </div>
-        ))
+      {blog ? (
+        <>
+          <h2>{blog.title}</h2>
+          <p>{blog.content}</p>
+          <form onSubmit={handleCommentSubmit}>
+            <input
+              type="text"
+              placeholder="Add a comment..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <button type="submit">Post Comment</button>
+          </form>
+        </>
       ) : (
-        <p>No comments yet.</p>
+        <p>Loading...</p>
       )}
-      <form onSubmit={handleCommentSubmit}>
-        <textarea
-          placeholder="Add a comment"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          required
-        />
-        <button type="submit">Post Comment</button>
-      </form>
     </div>
   );
 };

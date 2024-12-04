@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import "../styles/Navbar.css";
+import { useNavigate } from "react-router-dom";
+import "./Navbar.css";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -14,37 +14,20 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <ul className="navbar-links">
-        <li>
-          <Link to="/">Home</Link>
-        </li>
+      <h1>Blog Application</h1>
+      <div>
         {user ? (
           <>
-            <li>
-              <Link to="/dashboard">Dashboard</Link>
-            </li>
-            {user.isAdmin && (
-              <li>
-                <Link to="/admin">Admin</Link>
-              </li>
-            )}
-            <li>
-              <button onClick={handleLogout} className="logout-button">
-                Logout
-              </button>
-            </li>
+            <button onClick={() => navigate("/blogs")}>Blogs</button>
+            <button onClick={handleLogout}>Logout</button>
           </>
         ) : (
           <>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
+            <button onClick={() => navigate("/login")}>Login</button>
+            <button onClick={() => navigate("/register")}>Register</button>
           </>
         )}
-      </ul>
+      </div>
     </nav>
   );
 };

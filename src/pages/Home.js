@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import BlogList from "../components/BlogList";
+import React, { useState, useEffect } from "react";
 
 const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -8,19 +6,27 @@ const Home = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/server/blogs");
-        setBlogs(res.data);
-      } catch (err) {
-        console.error(err.response.data);
+        const response = await fetch("http://localhost:5000/server/blogs");
+        const data = await response.json();
+        setBlogs(data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
       }
     };
+
     fetchBlogs();
   }, []);
 
   return (
     <div>
-      <h1 style={{ textAlign: "center" }}>Blog Posts</h1>
-      <BlogList blogs={blogs} />
+      <h2>All Blogs</h2>
+      {blogs.map((blog) => (
+        <div key={blog._id}>
+          <h3>{blog.title}</h3>
+          <p>{blog.content}</p>
+          <small>Author: {blog.author.username}</small>
+        </div>
+      ))}
     </div>
   );
 };
