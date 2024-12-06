@@ -1,7 +1,10 @@
 body {
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    padding: 0;
+    box-sizing: border-box;
+    background: #fafafa;
+    color: #333;
 }
 
 a {
@@ -11,4 +14,8 @@ a {
 
 * {
     box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
 }

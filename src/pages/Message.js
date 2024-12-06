@@ -21,7 +21,7 @@ const Message = () => {
 
     return (
         <div>
-            <h1>Send a Message to the Universe</h1>
+            <h1>Send a Message</h1>
             <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
