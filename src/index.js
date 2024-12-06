@@ -1,16 +1,19 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client"; // New import for React 18
 import App from "./App";
-import { BrowserRouter as Router } from "react-router-dom";
 import { UserProvider } from "./contexts/UserContext";
+import { BrowserRouter } from "react-router-dom";
+import "./index.css";
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container); // Create React 18 root
+
+root.render(
     <React.StrictMode>
-        <Router>
-            <UserProvider>
-                <App />
+        <BrowserRouter>
+            <UserProvider>           
+                <App />           
             </UserProvider>
-        </Router>
-    </React.StrictMode>,
-    document.getElementById("root")
+        </BrowserRouter>
+    </React.StrictMode>
 );

@@ -9,10 +9,14 @@ export const UserProvider = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            const userData = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
-            setUser(userData);
+        try {
+            const token = localStorage.getItem("token");
+            if (token) {
+                const userData = JSON.parse(atob(token.split(".")[1])); // Decode JWT payload
+                setUser(userData);
+            }
+        } catch (error) {
+            console.error("Error accessing localStorage:", error.message);
         }
     }, []);
 
