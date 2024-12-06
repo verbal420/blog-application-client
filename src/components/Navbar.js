@@ -1,35 +1,27 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import "./Navbar.css";
+import { Link } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+    const { user, logout } = useContext(UserContext);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
-  return (
-    <nav className="navbar">
-      <h1 style={{ color: 'white' }}>Blog Application</h1>
-      <div>
-        {user ? (
-          <>
-            <button onClick={() => navigate("/blogs")}>Blogs</button>
-            <button onClick={handleLogout}>Logout</button>
-          </>
-        ) : (
-          <>
-            <button onClick={() => navigate("/login")}>Login</button>
-            <button onClick={() => navigate("/register")}>Register</button>
-          </>
-        )}
-      </div>
-    </nav>
-  );
+    return (
+        <nav>
+            <Link to="/">Home</Link>
+            {user ? (
+                <>
+                    <Link to="/create">Create Post</Link>
+                    <Link to="/messages">Message</Link>
+                    <button onClick={logout}>Logout</button>
+                </>
+            ) : (
+                <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                </>
+            )}
+        </nav>
+    );
 };
 
 export default Navbar;

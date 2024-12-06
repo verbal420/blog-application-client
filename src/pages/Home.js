@@ -1,34 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Home = () => {
-  const [blogs, setBlogs] = useState([]);
+    const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/server/blogs");
-        const data = await response.json();
-        setBlogs(data);
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-      }
-    };
+    useEffect(() => {
+        const fetchPosts = async () => {
+            const response = await axios.get("http://localhost:4000/posts");
+            setPosts(response.data);
+        };
+        fetchPosts();
+    }, []);
 
-    fetchBlogs();
-  }, []);
-
-  return (
-    <div>
-      <h2>All Blogs</h2>
-      {blogs.map((blog) => (
-        <div key={blog._id}>
-          <h3>{blog.title}</h3>
-          <p>{blog.content}</p>
-          <small>Author: {blog.author.username}</small>
+    return (
+        <div>
+            <h1>Posts</h1>
+            {posts.map((post) => (
+                <div key={post._id}>
+                    <Link to={`/post/${post._id}`}>
+                        <h2>{post.title}</h2>
+                    </Link>
+                    <p>by {post.author.username}</p>
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default Home;
